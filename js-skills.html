@@ -374,6 +374,11 @@ function reverseString(msg) {
 
 <script>
   // put your code here
+  $("#agreeable-form").on("submit", function (evt) {
+    evt.preventDefault();
+    var responseString = "I like " + $("#favorite-food-input").val() + ", too.";
+    $("#agreeable-text").html(responseString);
+  });
 </script>
 
 <div class="hint">
@@ -403,6 +408,33 @@ function reverseString(msg) {
 
 <script>
   // put your code here
+  function playPopupGame () {
+    randomNum = Math.floor(Math.random() * 100) + 1;
+    startGame = confirm("We've picked a number between 1 and 100 (inclusive). Would you like to play our guessing game?");
+    console.log(randomNum);
+    if (startGame) {
+      var guess;
+      // Run game while they haven't guessed the right number, entered 0 to quit or have clicked cancel on the prompt box which would return null. Then since we convert the return value of the prompt to a number, that null also becomes 0.
+      while (guess !== randomNum && guess !== 0) {
+        guess = Number(prompt("Guess a number between 1 and 100.\nEnter 0 to quit."));
+        // Immediately check for termination clause. Break if met.
+        if (guess === 0) { break; }
+        // Handle guess.
+        if (guess > randomNum) {
+          alert("Too high!");
+        } else if (guess < randomNum) {
+          alert("Too low!");
+        } else if (guess === randomNum) {
+          alert("You guessed the right number!\nThanks for playing!");
+        } else {
+          alert("I'm sorry, your guess didn't make sense.");
+        }   
+      }
+    }
+    alert("Goodbye.");
+  }
+
+  $("#play-guessing-game").click(playPopupGame);
 </script>
 
 <div class="hint">
@@ -443,6 +475,47 @@ function reverseString(msg) {
 
 <script>
   // put your code here
+  function playFormGame () {
+    // disable Play! button
+    $("#play-guessing-game-2").prop("disabled", true);
+    // enable Guess button and input form
+    $("#try-this-number").prop("disabled", false);
+    $("#number-guessed").prop("disabled", false);
+    // establish variables for game
+    var correctNum = Math.floor(Math.random() * 100) + 1;
+    var guessedNums = []
+    // Log correct number for testing. Would be taken out in real game.
+    console.log(correctNum);
+    // add event listener to form
+    $("#guessing-game-2-form").on("submit", function(evt) {
+      evt.preventDefault();
+      handleGuess(correctNum, guessedNums);
+    });
+  }
+
+  function handleGuess(correctNum, guessedNums) {
+    console.log($("number-guessed").val());
+    var guess2 = Number($("#number-guessed").val());
+    console.log("guess2: " + guess2);
+    console.log(correctNum);
+    guessedNums.push(guess2);
+    if (guess2 > correctNum) {
+      $("#number-guessing-msg").html("Too high!\nSo far you've guessed:\n" + guessedNums.join(", "));
+    } else if (guess2 < correctNum) {
+      $("#number-guessing-msg").html("Too low!\nSo far you've guessed:\n" + guessedNums.join(", "));
+    } else if (guess2 === correctNum) {
+      $("#number-guessing-msg").html("Nicely done! You guessed the right answer in " + String(guessedNums.length) + " guesses!");
+      // Disable and enable all relevant fields
+      $("#try-this-number").prop("disabled", true);
+      $("#number-guessed").prop("disabled", true);
+      $("#play-guessing-game-2").prop("disabled", false);
+    } else {
+      $("#number-guessing-msg").html("I'm sorry; I don't understand.\nPlease try again.");
+    }
+  }
+
+  $("#play-guessing-game-2").click(playFormGame);
+
 </script>
 
 
