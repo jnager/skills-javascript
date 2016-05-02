@@ -212,7 +212,7 @@
 function reverseString(msg) {
   var newMsg = "";
    // moves through the string backward, concatenating each character to newMesg
-   for (i=0; i < msg.length; i++) {
+   for (var i=0; i < msg.length; i++) {
     newMsg += msg[msg.length - 1 - i];
    }
    return newMsg;
@@ -552,7 +552,46 @@ function reverseString(msg) {
 <script>
     var PRIME_COLORS = ['orange', 'midnightblue', 'darkgoldenrod', 'green', 'purple'];
 
+    function changePrimes () {
+      var arrayOfPrimes = $(".prime-box");
+      var lastPrime = Number(arrayOfPrimes.get(arrayOfPrimes.length-1).innerHTML);
+      console.log(lastPrime);
+      var colorIndex = [];
+      $(".prime-box").each ( function () {
+        var newPrime = findNextPrime(lastPrime);
+        $( this ).html(newPrime);
+        var colorNumber = Math.floor(Math.random() * PRIME_COLORS.length);
+        // This seems inefficient, but I wasn't sure how else to make sure no colors repeat.
+        while (colorIndex.indexOf(colorNumber) > -1) {
+          colorNumber = Math.floor(Math.random() * PRIME_COLORS.length);
+        }
+        $( this ).css("background-color", PRIME_COLORS[colorNumber]);
+        colorIndex.push(colorNumber);
+        lastPrime = newPrime;
+      });
+    }
+
+  function findNextPrime(lastPrime) {
+    var nextPrime = 0;
+    while (nextPrime === 0) {
+      lastPrime += 1;
+      // optimistically set nextPrime equal to last prime;
+      nextPrime = lastPrime;
+      // Loop through each possible divisor to see if prime.
+      DividingLoop: //Labeling the loop to use in break statement.
+      for (var j = 2; j <= Math.floor(Math.sqrt(lastPrime)); j++) {
+        // if an even divisor can be found, set nextPrime back to null and break loop.
+        if (lastPrime % j === 0) { 
+          nextPrime = 0;
+          break DividingLoop;
+        }
+      }
+    }
+    return nextPrime;
+  }
+
   // put the rest of your code here
+  $("#make-prime-boxes").click(changePrimes);
 </script>
 
 
